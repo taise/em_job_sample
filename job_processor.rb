@@ -6,9 +6,10 @@ class JobProcessor
   SUCCESS = 0
   ERROR = 1
   ANSI_COLOR_CODE = {
-    red:   '\e[41',
-    cyan:  '\e[46',
-    green: '\e[42',
+    red:   "\e[31m",
+    cyan:  "\e[36m",
+    green: "\e[32m",
+    reset: "\e[0m"
   }
 
   attr_reader :last_time
@@ -19,7 +20,7 @@ class JobProcessor
 
   def process(time)
     @last_time = time
-    puts self.to_s
+    color_print
     if time == 2
       return ERROR
     end
@@ -29,6 +30,10 @@ class JobProcessor
 
   def to_s
     "oid: #{object_id}, time: #{@last_time}"
+  end
+
+  def color_print
+    print ansi_color_code + self.to_s + ANSI_COLOR_CODE[:reset] + "\n"
   end
 
   private
