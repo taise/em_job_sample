@@ -10,7 +10,6 @@ EM.run do
 
   check = lambda do
     done += 1
-    puts "done: #{done}, scheduled: #{scheduled}"
     if done >= scheduled
       EM.stop
     end
