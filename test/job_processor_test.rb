@@ -2,6 +2,10 @@ require 'minitest/autorun'
 require './worker'
 
 class JobProcessorTest < Minitest::Test
+  RED   = 0
+  CYAN  = 1
+  GREEN = 2
+
   def setup
     @job_processor = JobProcessor.new
   end
@@ -16,10 +20,10 @@ class JobProcessorTest < Minitest::Test
   end
 
   def test_initialized
-    assert_equal nil,   JobProcessor.new.last_time
+    assert_equal nil, JobProcessor.new.last_time
 
-    JobProcessor.count = 0
-    assert_equal :red,   JobProcessor.new.color
+    JobProcessor.count = RED
+    assert_equal :red, JobProcessor.new.color
   end
 
   def test_process_success
@@ -42,11 +46,20 @@ class JobProcessorTest < Minitest::Test
   end
 
   def test_color
-    JobProcessor.count = 1
-    assert_equal :blue,  JobProcessor.new.color
-    JobProcessor.count = 2
-    assert_equal :green, JobProcessor.new.color
-    JobProcessor.count = 3
+    JobProcessor.count = RED
     assert_equal :red,   JobProcessor.new.color
+    JobProcessor.count = CYAN
+    assert_equal :cyan,  JobProcessor.new.color
+    JobProcessor.count = GREEN
+    assert_equal :green, JobProcessor.new.color
+  end
+
+  def test_ansi_color_code
+    JobProcessor.count = RED
+    assert_equal '\e[41',  JobProcessor.new.ansi_color_code
+    JobProcessor.count = CYAN
+    assert_equal '\e[46',  JobProcessor.new.ansi_color_code
+    JobProcessor.count = GREEN
+    assert_equal '\e[42',  JobProcessor.new.ansi_color_code
   end
 end

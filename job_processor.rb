@@ -5,6 +5,11 @@ class JobProcessor
 
   SUCCESS = 0
   ERROR = 1
+  ANSI_COLOR_CODE = {
+    red:   '\e[41',
+    cyan:  '\e[46',
+    green: '\e[42',
+  }
 
   attr_reader :color, :last_time
   def initialize
@@ -28,10 +33,14 @@ class JobProcessor
 
   def color
     if @color.nil?
-      @color = [:red, :blue, :green][@@count % 3]
+      @color = [:red, :cyan, :green][@@count % 3]
       @@count += 1
     end
     @color
+  end
+
+  def ansi_color_code
+    ANSI_COLOR_CODE[color]
   end
 
   def to_s
