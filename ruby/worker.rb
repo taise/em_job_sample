@@ -1,17 +1,36 @@
 require 'eventmachine'
+require './job_processor'
 
 class Worker
-  include EM::Deferrable
+  def start
+    EM.run do
+      puts "main: #{Thread.current}"
+      job_processor = JobProcessor.new
 
-  SUCCESS = 0
-  ERROR = 1
+      job_processor.callback do |time, return_code|
+        puts "callback: #{Thread.current}"
+        puts "#{return_code} # #{time}"
+      end
 
-  def process
-    time = rand(3)
-    if time == 2
-      return time, ERROR
+      job_processor.errback do |time, return_code|
+        puts "callback: #{Thread.current}"
+        puts "#{return_code} # #{time}"
+      end
+
+      puts '--- calling defer'
+      time, return_code = job_processor.process
+      puts '--- set process state'
+      job_processor.succeed(time, return_code) if return_code == 0
+      job_processor.fail(time, return_code)    if return_code != 0
+
+      puts '--- defer stop'
+      EM.stop
     end
-    sleep time
-    return time, SUCCESS
   end
+end
+
+
+worker = Worker.new
+3.times do
+  worker.start
 end
