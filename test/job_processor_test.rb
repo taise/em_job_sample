@@ -44,6 +44,9 @@ class JobProcessorTest < Minitest::Test
   def test_color
     JobProcessor.count = 1
     assert_equal :blue,  JobProcessor.new.color
+    JobProcessor.count = 2
     assert_equal :green, JobProcessor.new.color
+    JobProcessor.count = 3
+    assert_equal :red,   JobProcessor.new.color
   end
 end
