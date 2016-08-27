@@ -11,7 +11,7 @@ class JobProcessor
     green: '\e[42',
   }
 
-  attr_reader :color, :last_time
+  attr_reader :last_time
   def initialize
     @@count ||= 0
     @last_time
@@ -31,6 +31,12 @@ class JobProcessor
     return SUCCESS
   end
 
+  def to_s
+    "oid: #{object_id}, time: #{@last_time}"
+  end
+
+  private
+
   def color
     if @color.nil?
       @color = [:red, :cyan, :green][@@count % 3]
@@ -41,9 +47,5 @@ class JobProcessor
 
   def ansi_color_code
     ANSI_COLOR_CODE[color]
-  end
-
-  def to_s
-    "oid: #{object_id}, time: #{@last_time}"
   end
 end
