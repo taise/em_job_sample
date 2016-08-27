@@ -1,6 +1,13 @@
 require 'minitest/autorun'
 require './worker'
 
+class JobProcessor
+  # for testable colors
+  def self.count=(n)
+    @@count = n
+  end
+end
+
 class JobProcessorTest < Minitest::Test
   RED   = 0
   CYAN  = 1

@@ -17,10 +17,6 @@ class JobProcessor
     @last_time
   end
 
-  def self.count=(n)
-    @@count = n
-  end
-
   def process(time)
     @last_time = time
     puts self.to_s
