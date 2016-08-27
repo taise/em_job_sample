@@ -37,6 +37,7 @@ EM.run do
   pool.on_error { |job_processor| spawn[] }
   loop do
     if pool.contents.size > 0
+      job_status.start
       perform_process(pool, job_status)
     end
     # sleep(0.1)
