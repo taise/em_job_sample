@@ -30,7 +30,6 @@ class Worker
 end
 
 
-worker = Worker.new
-3.times do
-  worker.start
+if __FILE__ == $0
+  Worker.new.start
 end
