@@ -52,21 +52,20 @@ class JobProcessorTest < Minitest::Test
     assert_equal expect, @job_processor.to_s
   end
 
-  def test_color
+  def test_color_and_ansi_color_code
     JobProcessor.count = RED
-    assert_equal :red,   JobProcessor.new.send(:color)
-    JobProcessor.count = CYAN
-    assert_equal :cyan,  JobProcessor.new.send(:color)
-    JobProcessor.count = GREEN
-    assert_equal :green, JobProcessor.new.send(:color)
-  end
+    job_processor = JobProcessor.new
+    assert_equal :red,    job_processor.send(:color)
+    assert_equal '\e[41', job_processor.send(:ansi_color_code)
 
-  def test_ansi_color_code
-    JobProcessor.count = RED
-    assert_equal '\e[41',  JobProcessor.new.send(:ansi_color_code)
     JobProcessor.count = CYAN
-    assert_equal '\e[46',  JobProcessor.new.send(:ansi_color_code)
+    job_processor = JobProcessor.new
+    assert_equal :cyan,   job_processor.send(:color)
+    assert_equal '\e[46', job_processor.send(:ansi_color_code)
+
     JobProcessor.count = GREEN
-    assert_equal '\e[42',  JobProcessor.new.send(:ansi_color_code)
+    job_processor = JobProcessor.new
+    assert_equal :green,  job_processor.send(:color)
+    assert_equal '\e[42', job_processor.send(:ansi_color_code)
   end
 end
