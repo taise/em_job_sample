@@ -6,12 +6,11 @@ class JobProcessor
   SUCCESS = 0
   ERROR = 1
 
-  def process
-    time = rand(3)
+  def process(time)
     if time == 2
-      return time, ERROR
+      return ERROR
     end
     sleep time
-    return time, SUCCESS
+    return SUCCESS
   end
 end

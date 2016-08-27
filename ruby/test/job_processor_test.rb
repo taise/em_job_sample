@@ -12,8 +12,10 @@ class JobProcessorTest < Minitest::Test
   end
 
   def test_process
-    time, return_code = JobProcessor.new.process
-    assert (0..2).include? time
-    assert fixed_values.include? return_code
+    time, return_code = JobProcessor.new.process(1)
+    assert_equal  JobProcessor::SUCCESS, return_code
+
+    time, return_code = JobProcessor.new.process(2)
+    assert_equal  JobProcessor::ERROR, return_code
   end
 end
