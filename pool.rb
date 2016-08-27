@@ -7,13 +7,11 @@ def perform_process(pool, job_status)
     pool.perform do |job_processor|
 
       job_processor.callback do |time, job_status|
-        puts "oid: #{job_processor.object_id}, time: #{time} callback: #{Thread.current}"
         job_status.success
         job_status.print
       end
 
       job_processor.errback do |time, job_status|
-        puts "oid: #{job_processor.object_id}, time: #{time} callback: #{Thread.current}"
         job_status.fail
         job_status.print
       end
@@ -38,6 +36,11 @@ EM.run do
 
   pool.on_error { |job_processor| spawn[] }
   loop do
-    perform_process(pool, job_status)
+    if pool.contents.size > 0
+      EM.run do
+        perform_process(pool, job_status)
+      end
+    end
+    sleep(0.1)
   end
 end
