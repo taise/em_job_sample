@@ -7,11 +7,9 @@ EM.run do
   3.times { spawn[] }
   done, scheduled = 0, 0
 
-  p pool
-  p pool.contents
-
   check = lambda do
     done += 1
+    puts "done: #{done}, scheduled: #{scheduled}"
     if done >= scheduled
       EM.stop
     end
@@ -19,23 +17,22 @@ EM.run do
 
   pool.on_error { |conn| spawn[] }
 
-  3.times do |n|
+  loop do
     pool.perform do |job_processor|
 
-      job_processor.process(n)
-
-      job_processor.callback do |return_code|
-        puts "callback: #{Thread.current}"
+      job_processor.callback do |time|
+        puts "oid: #{job_processor.object_id}, time: #{time} callback: #{Thread.current}"
         check[]
       end
 
       job_processor.errback { check[] }
 
       puts '--- calling defer'
-      return_code = job_processor.process(rand(3))
+      time = rand(10)
+      return_code = job_processor.process(time)
       puts '--- set process state'
-      job_processor.succeed(return_code) if return_code == 0
-      job_processor.fail(return_code)    if return_code != 0
+      job_processor.succeed(time) if return_code == 0
+      job_processor.fail(time)    if return_code != 0
 
       job_processor
     end
