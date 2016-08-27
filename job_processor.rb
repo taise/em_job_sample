@@ -18,7 +18,7 @@ class JobProcessor
 
   def process(time)
     @last_time = time
-    puts "oid: #{object_id}, time: #{time}"
+    puts self.to_s
     if time == 2
       return ERROR
     end
@@ -32,5 +32,9 @@ class JobProcessor
       @@count += 1
     end
     @color
+  end
+
+  def to_s
+    "oid: #{object_id}, time: #{@last_time}"
   end
 end

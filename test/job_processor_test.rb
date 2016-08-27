@@ -2,6 +2,10 @@ require 'minitest/autorun'
 require './worker'
 
 class JobProcessorTest < Minitest::Test
+  def setup
+    @job_processor = JobProcessor.new
+  end
+
   def fixed_values
     [JobProcessor::SUCCESS, JobProcessor::ERROR]
   end
@@ -16,19 +20,30 @@ class JobProcessorTest < Minitest::Test
 
     JobProcessor.count = 0
     assert_equal :red,   JobProcessor.new.color
-    assert_equal :blue,  JobProcessor.new.color
-    assert_equal :green, JobProcessor.new.color
   end
 
-  def test_process
-    job_processor = JobProcessor.new
-    return_code = job_processor.process(1)
+  def test_process_success
+    return_code = @job_processor.process(0.1)
     assert_equal  JobProcessor::SUCCESS, return_code
-    assert_equal  1, job_processor.last_time
+    assert_equal  0.1, @job_processor.last_time
+  end
 
-    job_processor = JobProcessor.new
-    return_code = job_processor.process(2)
+  def test_process_error
+    return_code = @job_processor.process(2)
     assert_equal  JobProcessor::ERROR, return_code
-    assert_equal  2, job_processor.last_time
+    assert_equal  2, @job_processor.last_time
+  end
+
+  def test_to_s
+    time = 0.1
+    @job_processor.process(time)
+    expect = "oid: #{@job_processor.object_id}, time: #{time}"
+    assert_equal expect, @job_processor.to_s
+  end
+
+  def test_color
+    JobProcessor.count = 1
+    assert_equal :blue,  JobProcessor.new.color
+    assert_equal :green, JobProcessor.new.color
   end
 end
